@@ -1,0 +1,255 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at 20% 20%, #1f2230 0%, #0f1117 45%, #090a0f 100%);
+  color: #f3f4f8;
+}
+
+section {
+  width: min(1100px, 92%);
+  margin: 2rem auto 3rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1.5rem;
+  padding: 2rem;
+  border: 1px solid #2a3042;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #171a24 0%, #121622 100%);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  margin-bottom: 1.75rem;
+}
+
+.hero-content h2 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  line-height: 1.1;
+  margin: 0.4rem 0 0.9rem;
+}
+
+.hero-eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f2b56c;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.hero-subtext {
+  margin: 0;
+  color: #cdd2e0;
+  line-height: 1.65;
+  max-width: 60ch;
+}
+
+.hero-cta {
+  display: inline-block;
+  margin-top: 1.1rem;
+  padding: 0.68rem 1.1rem;
+  border-radius: 999px;
+  background: #f2b56c;
+  color: #11131b;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.hero-cta:hover {
+  background: #f7c588;
+}
+
+.hero-stats {
+  display: grid;
+  gap: 0.7rem;
+  align-content: center;
+}
+
+.hero-stat-card {
+  border: 1px solid #30374b;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 0.95rem 1rem;
+}
+
+.hero-stat-value {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.hero-stat-label {
+  display: block;
+  font-size: 0.92rem;
+  color: #c4cada;
+  margin-top: 0.2rem;
+}
+
+form {
+  background: #141925;
+  border: 1px solid #2c3347;
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  margin-bottom: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #38405a;
+  border-radius: 9px;
+  background: #0e121d;
+  color: #eef1f8;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 0.6rem 1rem;
+  background: #d98a3f;
+  color: #f8f8f8;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e79a51;
+}
+
+.topnav {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0e1120;
+  border-bottom: 1px solid #2a3042;
+  padding: 0 1.5rem;
+  height: 56px;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #f2b56c;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.search-form {
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: #1b2035;
+  border: 1px solid #2e3650;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 36px;
+}
+
+.search-wrapper input[type="text"] {
+  background: transparent;
+  border: none;
+  color: #eef1f8;
+  padding: 0 0.75rem;
+  font-size: 0.9rem;
+  width: 200px;
+  margin: 0;
+  outline: none;
+}
+
+.search-wrapper button {
+  background: #2b3450;
+  border: none;
+  border-radius: 0;
+  color: #f2b56c;
+  padding: 0 0.75rem;
+  height: 100%;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper button:hover {
+  background: #384264;
+}
+
+.sort-divider {
+  border: none;
+  border-top: 1px solid #2a3042;
+  margin: 2.6rem 0 1rem;
+}
+
+.sort-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  width: auto;
+}
+
+.sort-form select {
+  width: auto;
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.sort-form button {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 600px) {
+  section {
+    width: 94%;
+    margin-top: 1.3rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.7rem;
+  }
+
+  .search-wrapper input[type="text"] {
+    width: 130px;
+  }
+}

@@ -1,0 +1,55 @@
+<%- include("partials/header.ejs") %>
+
+<section>
+  -- HERO SECTION --
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Personal Reading Vault</p>
+      <h2>Write better notes for every book you finish.</h2>
+      <p class="hero-subtext">
+        Save highlights, track ratings, and build your own library of insights so every book stays useful long after the last page.
+      </p>
+      <a class="hero-cta" href="#book-note-form">Start a new note</a>
+    </div>
+    <div class="hero-stats" aria-label="Reading note statistics">
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">100%</span>
+        <span class="hero-stat-label">Your notes, your words</span>
+      </div>
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">1-5</span>
+        <span class="hero-stat-label">Simple rating system</span>
+      </div>
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">A-Z</span>
+        <span class="hero-stat-label">Easy sorting options</span>
+      </div>
+    </div>
+  </div>
+  <!-- BOOK COVER IMAGE -->
+ 
+
+  <!-- BOOK NOTE FORM -->
+  <form id="book-note-form" action="/add" method="POST">
+    <input type="text" name="title" placeholder="Book Title" required />
+    <input type="text" name="author" placeholder="Author" required />
+    <textarea name="notes" placeholder="Your notes about the book..." required></textarea>
+    <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required />
+    <button type="submit">Add Book Note</button>
+  </form>
+
+  <!-- sort options -->
+  <hr class="sort-divider" />
+
+  <form class="sort-form" action="/" method="GET">
+     <select name="sort"> 
+      <option value="newest" <%= (typeof currentSort !== "newNotes" && currentSort === "newest") ? "selected" : "" %>>Newest</option> 
+      <option value="oldest" <%= (typeof currentSort !== "oldNotes" && currentSort === "oldest") ? "selected" : "" %>>Oldest</option>
+       <option value="title_asc" <%= (typeof currentSort !== "titleAsc" && currentSort === "title_asc") ? "selected" : "" %>>Title A-Z</option> 
+       <option value="rating_desc" <%= (typeof currentSort !== "ratingDesc" && currentSort === "rating_desc") ? "selected" : "" %>>Rating high-low</option> </select> 
+       <button type="submit">Sort</button> </form>
+</section>
+
+<br> </br>
+
+<%- include("partials/footer.ejs") %>
