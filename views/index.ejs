@@ -26,13 +26,13 @@
       </div>
     </div>
   </div>
-  <!-- BOOK COVER IMAGE -->
- 
+
 
   <!-- BOOK NOTE FORM -->
   <form id="book-note-form" action="/add" method="POST">
     <input type="text" name="title" placeholder="Book Title" required />
     <input type="text" name="author" placeholder="Author" required />
+    <input type="date" name="date_read" required />
     <textarea name="notes" placeholder="Your notes about the book..." required></textarea>
     <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required />
     <button type="submit">Add Book Note</button>
@@ -41,15 +41,54 @@
   <!-- sort options -->
   <hr class="sort-divider" />
 
-  <form class="sort-form" action="/" method="GET">
-     <select name="sort"> 
-      <option value="newest" <%= (typeof currentSort !== "newNotes" && currentSort === "newest") ? "selected" : "" %>>Newest</option> 
-      <option value="oldest" <%= (typeof currentSort !== "oldNotes" && currentSort === "oldest") ? "selected" : "" %>>Oldest</option>
-       <option value="title_asc" <%= (typeof currentSort !== "titleAsc" && currentSort === "title_asc") ? "selected" : "" %>>Title A-Z</option> 
-       <option value="rating_desc" <%= (typeof currentSort !== "ratingDesc" && currentSort === "rating_desc") ? "selected" : "" %>>Rating high-low</option> </select> 
-       <button type="submit">Sort</button> </form>
+ <form class="sort-form" action="/" method="GET">
+  <select name="sort">
+    <option value="date_desc" <%= sort === "date_desc" ? "selected" : "" %>>Newest</option>
+    <option value="date_asc" <%= sort === "date_asc" ? "selected" : "" %>>Oldest</option>
+    <option value="title_asc" <%= sort === "title_asc" ? "selected" : "" %>>Title A-Z</option>
+    <option value="rating_desc" <%= sort === "rating_desc" ? "selected" : "" %>>Rating high-low</option>
+  </select>
+
+  <button type="submit">Sort</button>
+</form>
 </section>
 
 <br> </br>
+  <!-- BOOK COVER IMAGE -->
+ 
+
+<!-- SAVED BOOK NOTES LIST -->
+<div class="books-container">
+  <% if (books && books.length > 0) { %>
+    <% books.forEach((book) => { %>
+      <div class="book-card">
+        <div class="book-header">
+        <% if (book.cover_url) { %>
+  <img src="<%= book.cover_url %>" alt="Book Cover" class="book-cover" />
+<% } else { %>
+  <p>No cover found</p>
+<% } %>
+         <h3><%= book.title %></h3>
+          <span class="rating">★ <%= book.rating %>/5</span>
+        </div>
+        <p class="author"><strong>Author:</strong> <%= book.author || "Unknown" %></p>
+        <p class="book-notes"><%= book.notes %></p>
+        
+        <div class="book-actions">
+          <form action="/edit" method="POST" style="display:inline;">
+            <input type="hidden" name="id" value="<%= book.id %>" />
+            <button type="submit" class="edit-btn">Edit</button>
+          </form>
+          <form action="/delete" method="POST" style="display:inline;">
+            <input type="hidden" name="id" value="<%= book.id %>" />
+            <button type="submit" class="delete-btn" onclick="return confirm('Delete this note?')">Delete</button>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p style="text-align: center; color: #999; margin-top: 2rem;">No book notes yet. Fill the form above to add one!</p>
+  <% } %>
+</div>
 
 <%- include("partials/footer.ejs") %>
