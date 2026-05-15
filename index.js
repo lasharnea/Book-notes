@@ -12,18 +12,24 @@ const isReadOnlyDemo = process.env.DEMO_READ_ONLY === "true"; // Public demo mod
 const ownerUsername = process.env.OWNER_USERNAME || "owner"; // Demo owner username.
 const ownerPassword = process.env.OWNER_PASSWORD; // Demo owner password.
 
-const db = new pg.Client( // Configure the database connection.
-  process.env.DATABASE_URL
-    ? { connectionString: process.env.DATABASE_URL } // Prefer the full Railway connection URL when available.
-    : {
-        user: process.env.DB_USER,
-        host: process.env.DB_HOST,
-        database: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        port: process.env.DB_PORT,
-      }
-);
-db.connect(); // Open the connection to PostgreSQL.
+const dbConfig = process.env.DATABASE_URL // Configure the database connection.
+  ? { connectionString: process.env.DATABASE_URL } // Prefer the full Railway connection URL when available.
+  : {
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+    };
+
+// Use a connection pool instead of a single client so the app recovers
+// automatically if the database drops and reconnects mid-run.
+const db = new pg.Pool(dbConfig);
+
+db.on("error", (err) => {
+  // Log unexpected errors on idle pool clients without crashing the process.
+  console.error("Unexpected database client error:", err.message);
+});
 
 
 app.use(bodyParser.urlencoded({ extended: true })); // Read form submissions.
@@ -251,7 +257,32 @@ try {
 }
 });
 
-// Start the server.
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-}); 
+// Attempt to acquire a connection from the pool, retrying until Postgres is
+// ready. Once a connection succeeds the HTTP server is started, ensuring the
+// app never accepts traffic before the database is reachable.
+async function startServer(retriesLeft = 10, delayMs = 3000) {
+  let client;
+  try {
+    client = await db.connect(); // Verify the pool can reach Postgres.
+    console.log("Database connection established.");
+    client.release(); // Return the test connection to the pool immediately.
+
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  } catch (err) {
+    if (client) client.release(true); // Discard a broken client if one was returned.
+
+    if (retriesLeft === 0) {
+      console.error("Could not connect to the database after multiple retries. Exiting.");
+      process.exit(1);
+    }
+
+    console.error(
+      `Database not ready (${err.message}). Retrying in ${delayMs / 1000}s… (${retriesLeft} retries left)`
+    );
+    setTimeout(() => startServer(retriesLeft - 1, delayMs), delayMs);
+  }
+}
+
+startServer();
