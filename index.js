@@ -1,6 +1,7 @@
 import express from "express"; // Web server framework.
 import bodyParser from "body-parser"; // Parses form data from POST requests.
 import session from "express-session"; // Stores a small owner login session.
+import ConnectPgSimple from "connect-pg-simple"; // Persistent session store backed by Postgres.
 import pg from "pg"; // PostgreSQL client.
 import ejs from "ejs"; // Template engine for server-rendered pages.
 import "dotenv/config"; // Loads environment variables from .env.
@@ -33,7 +34,12 @@ db.on("error", (err) => {
 
 
 app.use(bodyParser.urlencoded({ extended: true })); // Read form submissions.
+const PgSession = ConnectPgSimple(session); // Build the Postgres-backed session store class.
 app.use(session({
+  store: new PgSession({
+    pool: db,           // Reuse the existing connection pool.
+    createTableIfMissing: true, // Auto-create the "session" table on first run.
+  }),
   secret: process.env.SESSION_SECRET || "book-notes-demo-session",
   resave: false,
   saveUninitialized: false,
