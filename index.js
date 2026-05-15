@@ -267,6 +267,25 @@ async function startServer(retriesLeft = 10, delayMs = 3000) {
     console.log("Database connection established.");
     client.release(); // Return the test connection to the pool immediately.
 
+    // Initialise the schema so the app can query the books table immediately.
+    try {
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS books (
+          id        SERIAL PRIMARY KEY,
+          title     TEXT,
+          author    TEXT,
+          date_read DATE,
+          rating    INTEGER,
+          notes     TEXT,
+          cover_id  INTEGER,
+          cover_url TEXT
+        )
+      `);
+      console.log("Database schema ready (books table exists or was created).");
+    } catch (schemaErr) {
+      console.error("Failed to initialise database schema:", schemaErr.message);
+    }
+
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server running on http://0.0.0.0:${port}`);
     });
