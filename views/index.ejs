@@ -1,94 +1,198 @@
 <%- include("partials/header.ejs") %>
 
 <section>
-  -- HERO SECTION --
+  <!-- Hero section with personal intro. -->
   <div class="hero">
-    <div class="hero-content">
-      <p class="hero-eyebrow">Personal Reading Vault</p>
-      <h2>Write better notes for every book you finish.</h2>
-      <p class="hero-subtext">
-        Save highlights, track ratings, and build your own library of insights so every book stays useful long after the last page.
-      </p>
-      <a class="hero-cta" href="#book-note-form">Start a new note</a>
+    <!-- Avatar column. -->
+    <div class="hero-avatar-col">
+      <div class="hero-avatar" aria-label="Avatar">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" width="122" height="146">
+          <!-- Long hair (behind head) -->
+          <rect x="22" y="38" width="56" height="80" rx="10" fill="#0d0d0d"/>
+          <!-- Hair top -->
+          <ellipse cx="50" cy="32" rx="27" ry="20" fill="#0d0d0d"/>
+          <!-- Face -->
+          <circle cx="50" cy="52" r="24" fill="#A0522D"/>
+          <!-- Hair parting / top shine -->
+          <ellipse cx="50" cy="24" rx="18" ry="10" fill="#1a1a1a"/>
+          <!-- Whites of eyes -->
+          <ellipse cx="40" cy="50" rx="5.5" ry="5" fill="#f5f0ea"/>
+          <ellipse cx="60" cy="50" rx="5.5" ry="5" fill="#f5f0ea"/>
+          <!-- Pupils -->
+          <circle cx="40.5" cy="50" r="3.2" fill="#1a0800"/>
+          <circle cx="60.5" cy="50" r="3.2" fill="#1a0800"/>
+          <!-- Eye shine -->
+          <circle cx="42" cy="48.5" r="1" fill="white"/>
+          <circle cx="62" cy="48.5" r="1" fill="white"/>
+          <!-- Glasses frames -->
+          <rect x="32.5" y="45.5" width="14" height="10" rx="3" fill="none" stroke="#111" stroke-width="1.8"/>
+          <rect x="53.5" y="45.5" width="14" height="10" rx="3" fill="none" stroke="#111" stroke-width="1.8"/>
+          <!-- Glasses bridge -->
+          <line x1="46.5" y1="50" x2="53.5" y2="50" stroke="#111" stroke-width="1.6"/>
+          <!-- Glasses arms -->
+          <line x1="32.5" y1="50" x2="28" y2="50" stroke="#111" stroke-width="1.6"/>
+          <line x1="67.5" y1="50" x2="72" y2="50" stroke="#111" stroke-width="1.6"/>
+          <!-- Nose -->
+          <ellipse cx="50" cy="58" rx="3" ry="2.2" fill="#7a3b18"/>
+          <!-- Smile -->
+          <path d="M 42 64 Q 50 71 58 64" stroke="#5c2e0e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
-    <div class="hero-stats" aria-label="Reading note statistics">
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">100%</span>
-        <span class="hero-stat-label">Your notes, your words</span>
-      </div>
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">1-5</span>
-        <span class="hero-stat-label">Simple rating system</span>
-      </div>
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">A-Z</span>
-        <span class="hero-stat-label">Easy sorting options</span>
-      </div>
+
+    <!-- Main copy column. -->
+    <div class="hero-content">
+      <p class="hero-eyebrow">Personal Book Notes</p>
+      <h2>My own little library of ideas.</h2>
+      <p class="hero-subtext">
+        This is my personal space for capturing thoughts on every book I read. I log ratings, jot down highlights, and keep notes I can actually look back on — all in one place, just for me.
+      </p>
+      <a class="hero-cta" href="<%= readOnlyDemo && !isOwner ? '#search-results' : '#book-note-form' %>"><%= readOnlyDemo && !isOwner ? 'Browse the library' : 'Add a new note' %></a>
+      <span class="hero-book-count"><i class="fas fa-book-open"></i> <%= books.length %> book<%= books.length !== 1 ? 's' : '' %> logged</span>
     </div>
   </div>
 
+  <% if (readOnlyDemo && !isOwner) { %>
+    <div class="demo-notice" role="status">
+      <strong>Public portfolio demo.</strong> Visitors can browse the library, while owner-only actions such as editing and deleting notes require login.
+    </div>
+  <% } %>
 
-  <!-- BOOK NOTE FORM -->
-  <form id="book-note-form" action="/add" method="POST">
-    <input type="text" name="title" placeholder="Book Title" required />
-    <input type="text" name="author" placeholder="Author" required />
-    <input type="date" name="date_read" required />
-    <textarea name="notes" placeholder="Your notes about the book..." required></textarea>
-    <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required />
-    <button type="submit">Add Book Note</button>
-  </form>
 
-  <!-- sort options -->
+  <!-- Form for adding a new book note. -->
+  <% if (!readOnlyDemo || isOwner) { %>
+    <form id="book-note-form" action="/add" method="POST">
+      <!-- Book title input. -->
+      <input type="text" name="title" placeholder="Book Title" required />
+      <!-- Author input. -->
+      <input type="text" name="author" placeholder="Author" required />
+      <!-- Date the book was read. -->
+      <input type="date" name="date_read" required />
+      <!-- Notes textarea. -->
+      <textarea name="notes" placeholder="Your notes about the book..." required></textarea>
+      <!-- 1-5 rating input. -->
+      <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required />
+      <!-- Submit button. -->
+      <button type="submit">Add Book Note</button>
+    </form>
+  <% } %>
+
+  <!-- Sorting controls for the saved notes list. -->
   <hr class="sort-divider" />
 
  <form class="sort-form" action="/" method="GET">
+  <!-- Choose the sort order. -->
   <select name="sort">
+    <!-- Newest first. -->
     <option value="date_desc" <%= sort === "date_desc" ? "selected" : "" %>>Newest</option>
+    <!-- Oldest first. -->
     <option value="date_asc" <%= sort === "date_asc" ? "selected" : "" %>>Oldest</option>
+    <!-- Alphabetical title order. -->
     <option value="title_asc" <%= sort === "title_asc" ? "selected" : "" %>>Title A-Z</option>
+    <!-- Highest rating first. -->
     <option value="rating_desc" <%= sort === "rating_desc" ? "selected" : "" %>>Rating high-low</option>
   </select>
 
+  <!-- Apply the selected sort. -->
   <button type="submit">Sort</button>
 </form>
 </section>
 
 <br> </br>
-  <!-- BOOK COVER IMAGE -->
+  <!-- Spacer before the saved notes section. -->
  
 
-<!-- SAVED BOOK NOTES LIST -->
+<!-- Saved notes heading and results anchor. -->
+<h2 id="search-results" class="saved-notes-title">My Book Notes List</h2>
+<!-- Grid of book note cards. -->
 <div class="books-container">
   <% if (books && books.length > 0) { %>
+    <!-- Render one card for each saved book. -->
     <% books.forEach((book) => { %>
-      <div class="book-card">
-        <div class="book-header">
-        <% if (book.cover_url) { %>
-  <img src="<%= book.cover_url %>" alt="Book Cover" class="book-cover" />
-<% } else { %>
-  <p>No cover found</p>
-<% } %>
-         <h3><%= book.title %></h3>
-          <span class="rating">★ <%= book.rating %>/5</span>
-        </div>
-        <p class="author"><strong>Author:</strong> <%= book.author || "Unknown" %></p>
-        <p class="book-notes"><%= book.notes %></p>
-        
-        <div class="book-actions">
-          <form action="/edit" method="POST" style="display:inline;">
-            <input type="hidden" name="id" value="<%= book.id %>" />
-            <button type="submit" class="edit-btn">Edit</button>
+      <% const isEditing = isOwner && String(editId || "") === String(book.id); %>
+      <!-- Individual book card. -->
+      <div class="book-card" id="book-card-<%= book.id %>">
+        <% if (isEditing) { %>
+          <!-- Inline edit form keeps editing on the same page. -->
+          <form action="/edit" method="POST" class="book-action-form edit-book-form" id="edit-book-<%= book.id %>">
+            <input type="hidden" name="bookId" value="<%= book.id %>" />
+            <input type="text" name="title" value="<%= book.title %>" required />
+            <input type="text" name="author" value="<%= book.author %>" required />
+            <input type="date" name="date_read" value="<%= book.date_read ? new Date(book.date_read).toISOString().slice(0, 10) : '' %>" required />
+            <textarea name="notes" required><%= book.notes %></textarea>
+            <input type="number" name="rating" min="1" max="5" value="<%= book.rating %>" required />
           </form>
-          <form action="/delete" method="POST" style="display:inline;">
-            <input type="hidden" name="id" value="<%= book.id %>" />
-            <button type="submit" class="delete-btn" onclick="return confirm('Delete this note?')">Delete</button>
-          </form>
-        </div>
+          <div class="book-actions">
+            <button type="submit" form="edit-book-<%= book.id %>" class="edit-btn">Save</button>
+            <form action="/" method="GET" class="book-action-form">
+              <% if (search) { %><input type="hidden" name="search" value="<%= search %>" /><% } %>
+              <% if (sort) { %><input type="hidden" name="sort" value="<%= sort %>" /><% } %>
+              <button type="submit" class="delete-btn">Cancel</button>
+            </form>
+          </div>
+        <% } else { %>
+          <!-- Title, cover, and rating. -->
+          <div class="book-header">
+           <!-- Book title. -->
+           <h3><%= book.title %></h3>
+          <!-- Show cover image if one exists. -->
+          <% if (book.cover_url) { %>
+    <img src="<%= book.cover_url %>" alt="Book Cover" class="book-cover" />
+  <% } else { %>
+    <!-- Fallback text when there is no cover. -->
+    <p class="no-cover">No cover found</p>
+  <% } %>
+            <!-- Star rating display. -->
+            <span class="rating">★ <%= book.rating %>/5</span>
+          </div>
+          <!-- Author line. -->
+          <p class="author"><strong>Author:</strong> <%= book.author || "Unknown" %></p>
+          <!-- Saved notes text. -->
+          <p class="book-notes"><%= book.notes %></p>
+
+          <!-- Action buttons for editing or deleting the note. -->
+          <div class="book-actions">
+            <% if (!isOwner) { %>
+              <span class="demo-chip">Read-only demo</span>
+            <% } else { %>
+              <!-- Edit mode toggle on the same page. -->
+              <form action="/" method="GET" class="book-action-form">
+                <input type="hidden" name="editId" value="<%= book.id %>" />
+                <% if (search) { %><input type="hidden" name="search" value="<%= search %>" /><% } %>
+                <% if (sort) { %><input type="hidden" name="sort" value="<%= sort %>" /><% } %>
+                <button type="submit" class="edit-btn">Edit</button>
+              </form>
+              <!-- Delete form. -->
+              <form action="/delete" method="POST" class="book-action-form">
+                <!-- Hidden book id. -->
+                <input type="hidden" name="bookId" value="<%= book.id %>" />
+                <!-- Delete button with confirmation prompt. -->
+                <button type="submit" class="delete-btn" onclick="return confirm('Delete this note?')">Delete</button>
+              </form>
+            <% } %>
+          </div>
+        <% } %>
       </div>
     <% }); %>
   <% } else { %>
+    <!-- Empty state when there are no saved notes. -->
     <p style="text-align: center; color: #999; margin-top: 2rem;">No book notes yet. Fill the form above to add one!</p>
   <% } %>
 </div>
+
+<!-- Scroll to the results section after a search submission. -->
+<% if ((search && search.trim()) || editId) { %>
+  <script>
+    // Keep the relevant content in view after reloads.
+    window.addEventListener("DOMContentLoaded", function () {
+      const targetId = "<%= editId ? 'book-card-' + editId : 'search-results' %>";
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  </script>
+<% } %>
 
 <%- include("partials/footer.ejs") %>

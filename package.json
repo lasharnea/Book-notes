@@ -1,7 +1,7 @@
 {
   "name": "Book notes",
   "version": "1.0.0",
-  "description": "",
+  "description": "Full-stack personal book library with PostgreSQL, Express, EJS, Open Library API integration, and owner authentication",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "pg": "^8.20.0"
   }
 }

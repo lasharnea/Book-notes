@@ -22,19 +22,58 @@
     <header>
       <nav>
         <div class="topnav">
-          <span class="nav-brand">Book Notes</span>
-          <div class="search-container">
-            <form action="/action_page.php" class="search-form">
+          <div class="nav-left">
+            <span class="nav-brand">Book Notes</span>
+          </div>
+          <div class="nav-center">
+            <a href="/" class="nav-home" aria-label="Home"><i class="fas fa-house"></i></a>
+          </div>
+          <div class="nav-right">
+            <form action="/" method="GET" class="search-form">
+              <% if (typeof sort !== "undefined" && sort) { %>
+                <input type="hidden" name="sort" value="<%= sort %>" />
+              <% } %>
               <div class="search-wrapper">
-                <input type="text" placeholder="Search.." name="search" />
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search books..."
+                  value="<%= search || '' %>"
+                  list="book-title-suggestions"
+                />
+                <datalist id="book-title-suggestions">
+                  <% if (Array.isArray(bookTitles) && bookTitles.length > 0) { %>
+                    <% bookTitles.forEach((title) => { %>
+                      <option value="<%= title %>"></option>
+                    <% }); %>
+                  <% } %>
+                </datalist>
                 <button type="submit" aria-label="Search">
                   <i class="fas fa-magnifying-glass"></i>
                 </button>
               </div>
             </form>
+
+            <span class="nav-divider" aria-hidden="true"></span>
+
+            <% if (isOwner) { %>
+              <div class="owner-auth owner-auth-logged-in">
+                <span class="owner-badge">Owner mode</span>
+                <form action="/logout" method="POST" class="owner-logout-form">
+                  <button type="submit" class="owner-auth-btn">Logout</button>
+                </form>
+              </div>
+            <% } else { %>
+              <form action="/login" method="POST" class="owner-login-form">
+                <input type="text" name="username" placeholder="Owner" class="owner-auth-input" required />
+                <input type="password" name="password" placeholder="Password" class="owner-auth-input" required />
+                <button type="submit" class="owner-auth-btn">Login</button>
+              </form>
+            <% } %>
           </div>
         </div>
+        <% if (loginError) { %>
+          <p class="login-error"><%= loginError %></p>
+        <% } %>
       </nav>
     </header>
-  </body>
-</html>
