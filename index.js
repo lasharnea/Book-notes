@@ -12,13 +12,17 @@ const isReadOnlyDemo = process.env.DEMO_READ_ONLY === "true"; // Public demo mod
 const ownerUsername = process.env.OWNER_USERNAME || "owner"; // Demo owner username.
 const ownerPassword = process.env.OWNER_PASSWORD; // Demo owner password.
 
-const db = new pg.Client({ // Configure the database connection.
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+const db = new pg.Client( // Configure the database connection.
+  process.env.DATABASE_URL
+    ? { connectionString: process.env.DATABASE_URL } // Prefer the full Railway connection URL when available.
+    : {
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT,
+      }
+);
 db.connect(); // Open the connection to PostgreSQL.
 
 
