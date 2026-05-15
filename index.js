@@ -7,7 +7,7 @@ import "dotenv/config"; // Loads environment variables from .env.
 import axios from "axios"; // Makes HTTP requests to external APIs.
 
 const app = express(); // Create the Express app.
-const port = 3000; // Local development port.
+const port = process.env.PORT || 3000; // Use Railway's dynamic PORT, fall back to 3000 for local dev.
 const isReadOnlyDemo = process.env.DEMO_READ_ONLY === "true"; // Public demo mode disables data changes.
 const ownerUsername = process.env.OWNER_USERNAME || "owner"; // Demo owner username.
 const ownerPassword = process.env.OWNER_PASSWORD; // Demo owner password.
