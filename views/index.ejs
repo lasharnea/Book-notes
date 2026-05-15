@@ -73,7 +73,11 @@
       <!-- 1-5 rating input. -->
       <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required />
       <!-- Submit button. -->
-      <button type="submit">Add Book Note</button>
+      <% if (isOwner) { %>
+        <button type="submit">Add Book Note</button>
+      <% } else { %>
+        <p class="demo-chip">Owner login required to add notes</p>
+      <% } %>
     </form>
   <% } %>
 
@@ -103,7 +107,7 @@
  
 
 <!-- Saved notes heading and results anchor. -->
-<h2 id="search-results" class="saved-notes-title">My Book Notes List</h2>
+<h2 id="search-results" class="saved-notes-title">My Library</h2>
 <!-- Grid of book note cards. -->
 <div class="books-container">
   <% if (books && books.length > 0) { %>

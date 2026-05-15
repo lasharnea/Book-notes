@@ -172,7 +172,7 @@ try {
 });
 
 // Add a new book note.
-app.post("/add", blockReadOnlyDemo, async (req, res) => {
+app.post("/add", requireOwner, blockReadOnlyDemo, async (req, res) => {
   try {
     const validationResult = validateBookInput(req.body);
 

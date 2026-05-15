@@ -159,6 +159,7 @@ button {
 }
 
 input[type="text"],
+input[type="date"],
 input[type="number"],
 textarea,
 select {
@@ -173,6 +174,23 @@ select {
 
 #book-note-form input[type="date"] {
   margin-bottom: 1rem;
+}
+
+input[type="date"] {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #eef1f8;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.95);
+  cursor: pointer;
 }
 
 textarea {
@@ -287,18 +305,33 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  flex-wrap: nowrap;
+}
+
+.owner-login-form .owner-auth-input,
+.owner-login-form .owner-auth-btn {
+  width: 106px;
+  height: 36px;
+  margin: 0;
+  padding: 0 0.65rem;
+  box-sizing: border-box;
+  border-radius: 999px;
 }
 
 .owner-auth-input {
   /* Owner login/logout controls */
   width: 110px;
+  height: 34px;
   margin: 0;
-  padding: 0.45rem 0.65rem;
+  padding: 0 0.65rem;
   border: 1px solid #394460;
   border-radius: 999px;
   background: #161c2d;
   color: #eef1f8;
   font-size: 0.82rem;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .owner-auth-input::placeholder {
@@ -316,6 +349,9 @@ button:hover {
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .owner-auth-btn:hover {
