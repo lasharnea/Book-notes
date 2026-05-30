@@ -4,7 +4,7 @@ Book Notes is a full-stack personal library application built with Node.js, Expr
 
 This project was built to demonstrate practical full-stack skills: API integration, server-side rendering, PostgreSQL persistence, CRUD operations, validation, and polished UI work, including session-based authentication.
 
-**LIVE URL :** book-notes-production-1684.up.railway.app 
+**LIVE URL :** [bbook-notes-production-1684.up.railway.app](https://book-notes-production-1684.up.railway.app/)
 
 ## What It Does
 
